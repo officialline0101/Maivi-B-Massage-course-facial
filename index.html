@@ -734,6 +734,7 @@
         <div class="menu-sections">
             <button type="button" onclick="showMenu('female')">フェイシャル</button>
             <button type="button" onclick="showMenu('whitening')">マッサージコース</button>
+            <button type="button" onclick="showMenu('daietto')">ダイエット</button>
         </div>
 
 <!-- メニュー表示エリア（選択されたメニュー名がここに出る） -->
@@ -778,6 +779,16 @@
             </div>
         </div>
 
+        <div id="daietto" class="menu-section">
+            <div class="highlight-background">
+                <span class="highlight-text">◆ダイエット◆</span>
+            </div>
+            <div class="symptoms">
+                <button type="button" onclick="selectSymptom(this, 'treatment8')" data-price="15000">よもぎ蒸し＋リンパドレナージュ<br>(初回120分)</button>
+                <button type="button" onclick="selectSymptom(this, 'treatment9')" data-price="15000">よもぎ蒸し＋リンパドレナージュ<br>(2回目以降100分)</button>
+            </div>
+        </div>
+        
         <div class="label">希望日時<span class="required">必須</span></div>
         <div class="calendar-container">
             <!-- 月を独立して配置 -->
@@ -875,8 +886,10 @@
         };
 
         let selectedirradiationsTime = 0; // 訪問回数で選択された時間
-
+        
         let menuTimes = {
+            'よもぎ蒸し＋リンパドレナージュ(初回120分)': 150,
+            'よもぎ蒸し＋リンパドレナージュ(2回目以降100分)': 130,
             'よもぎ蒸し(60分)': 90,
             'ハリ弾力アップコース(初回90分)': 120,
             'ハリ弾力アップコース(2回目以降60分)': 90,
