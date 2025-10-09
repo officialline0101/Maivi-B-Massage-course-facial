@@ -183,6 +183,7 @@
             box-sizing: border-box;
         }
 
+        .Motivation-buttons,
         .visit-buttons,
         .symptoms,
         .menu-sections,
@@ -193,6 +194,7 @@
             margin-bottom: 20px;
         }
 
+        .Motivation-buttons button,
         .visit-buttons button,
         .symptoms button,
         .menu-sections button,
@@ -208,6 +210,7 @@
             white-space: nowrap;
         }
 
+        .Motivation-buttons button.active,
         .visit-buttons button.active,
         .symptoms button.active,
         .menu-sections button.active,
@@ -729,6 +732,15 @@
             <button type="button" id="repeatVisit" onclick="selectVisit(this)">2回目以降</button>
         </div>
 
+        <div class="label">来店動機<span class="required">必須</span></div>
+        <div class="Motivation-buttons">
+            <button type="button" id="itiMotivation" onclick="selectMotivation(this)">紹介</button>
+            <button type="button" id="niMotivation" onclick="selectMotivation(this)">チラシ</button>
+            <button type="button" id="sanMotivation" onclick="selectMotivation(this)">Google検索</button>
+            <button type="button" id="yonMotivation" onclick="selectMotivation(this)">HP(ホームページ)</button>
+            <button type="button" id="goMotivation" onclick="selectMotivation(this)">Instagram</button>
+        </div>
+
         <div class="label" id="course">メニューをお選びください<span class="required">必須</span></div>
         <div class="info-text">※メニューを選択すると空き状況のカレンダーが表示されます</div>
         <div class="menu-sections">
@@ -844,6 +856,7 @@
 
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
     <script>
+        let MotivationCount = '';
         let visitCount = '';
         let selectedMenu = '';
         let selectedSymptom = [];  // 配列として定義
@@ -1193,6 +1206,27 @@
             fetchAvailability(currentDate);
         }
 
+        function selectMotivation(element) {
+            // 選択された日時をリセット
+            selectedFullDate = '';
+
+            document.getElementById('itiMotivation').classList.remove('active');
+            document.getElementById('niMotivation').classList.remove('active');
+            document.getElementById('sanMotivation').classList.remove('active');
+            document.getElementById('yonMotivation').classList.remove('active');
+            document.getElementById('goMotivation').classList.remove('active');
+            element.classList.add('active');
+            MotivationCount = element.innerText;
+
+            // 選択された訪問回数に対応する時間を取得
+            selectedMotivationTime = MotivationTimes[MotivationCount];
+
+            console.log('選択された訪問回数の時間:', selectedMotivationTime);
+
+            // カレンダーを更新するために取得する日付を渡す
+            fetchAvailability(currentDate);
+        }
+
         function showMenu(menu) {
             // `treatment-text` を非表示にする
             document.getElementById("treatment-text").style.display = "none";
@@ -1265,6 +1299,7 @@
                 name: document.getElementById('name').value.trim(),
                 phone: document.getElementById('phone').value.trim(),
                 visitCount: visitCount,
+                MotivationCount: MotivationCount,
                 selectedMenu: selectedMenu,
                 selectedSymptom: selectedSymptom && selectedSymptom.length > 0 ? selectedSymptom : null, // 空の選択肢をチェック
                 irradiationsCount: irradiationsCount,
@@ -1296,7 +1331,7 @@
             // LINEトークにメッセージを送信
             liff.sendMessages([{
                 type: 'text',
-                text: `【予約フォームB】\nお名前：${formData.name}\n電話番号：${formData.phone}\nご来店回数：${formData.visitCount}\nコース：${formData.selectedMenu}\nメニュー：${formData.selectedSymptom},${formData.irradiationsCount}\n希望日時：\n ${formData.dates[0]}\nメッセージ：${formData.message}`
+                text: `【予約フォームB】\nお名前：${formData.name}\n電話番号：${formData.phone}\nご来店回数：${formData.visitCount}\n来店動機：${formData.MotivationCount}\nコース：${formData.selectedMenu}\nメニュー：${formData.selectedSymptom},${formData.irradiationsCount}\n希望日時：\n ${formData.dates[0]}\nメッセージ：${formData.message}`
             }]).then(() => {
                 /* メッセージ送信成功時の処理 */
                 alert('当日キャンセルは無いようにお願いいたします。');
